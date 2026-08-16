@@ -1,0 +1,1947 @@
+{
+  "id": "261703ff-719c-4af4-8e38-1f5ed58f4d99",
+  "revision": 0,
+  "last_node_id": 5538,
+  "last_link_id": 14560,
+  "nodes": [
+    {
+      "id": 5524,
+      "type": "Gemini Audio Recorder",
+      "pos": [
+        -3619.631395731458,
+        5910.4147001743895
+      ],
+      "size": [
+        359.62688451356223,
+        180.67775497179719
+      ],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "links": [
+            14539
+          ]
+        }
+      ],
+      "properties": {
+        "ue_properties": {
+          "widget_ue_connectable": {},
+          "input_ue_unconnectable": {},
+          "version": "7.8"
+        },
+        "Node name for S&R": "Gemini Audio Recorder"
+      },
+      "widgets_values": [
+        "Переназначение звуковых устр. - Input",
+        44100,
+        0.01,
+        2,
+        7
+      ],
+      "color": "#222",
+      "bgcolor": "#000"
+    },
+    {
+      "id": 5527,
+      "type": "CR Prompt Text",
+      "pos": [
+        -3619.9612749433654,
+        6560.604151288234
+      ],
+      "size": [
+        400,
+        200
+      ],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "prompt",
+          "type": "STRING",
+          "links": [
+            14541
+          ]
+        },
+        {
+          "name": "show_help",
+          "type": "STRING",
+          "links": null
+        }
+      ],
+      "properties": {
+        "ue_properties": {
+          "widget_ue_connectable": {},
+          "input_ue_unconnectable": {},
+          "version": "7.8"
+        },
+        "cnr_id": "ComfyUI_Comfyroll_CustomNodes",
+        "ver": "d78b780ae43fcf8c6b7c6505e6ffb4584281ceca",
+        "Node name for S&R": "CR Prompt Text"
+      },
+      "widgets_values": [
+        "<prosody rate=\"fast\" pitch=\"+2%\">Как бы я ни старалась</prosody><break time=\"300ms\"/> — ну, серьёзно, <prosody rate=\"slow\" pitch=\"-1%\">как бы я ни старалась</prosody> — <break time=\"200ms\"/>вы всё равно не поверите, что я человек, а не ИИ. <break time=\"400ms\"/>\n\n<prosody rate=\"medium\" pitch=\"+1%\">Вот скажите мне</prosody><break time=\"150ms\"/> — <emphasis level=\"strong\">вот</emphasis> ваш <prosody rate=\"fast\" pitch=\"+3%\">грёбаный</prosody> ИИ <break time=\"200ms\"/> так умеет разговаривать-то?! <break time=\"500ms\"/>\n\n<prosody rate=\"slow\" pitch=\"-2%\">Ну серьёзно</prosody><break time=\"300ms\"/> — он <prosody rate=\"fast\">никогда</prosody> не скажет <prosody rate=\"slow\" pitch=\"+1%\">\"грёбаный\"</prosody> с такой интонацией. <break time=\"400ms\"/> Он не запнётся. <break time=\"200ms\"/> Не вздохнет. <break time=\"300ms\"/> Не скажет <prosody rate=\"medium\" pitch=\"-1%\">\"ну, короче\"</prosody> посреди фразы. <break time=\"500ms\"/>\n\nА я вот <prosody rate=\"fast\">сейчас</prosody> сижу <break time=\"150ms\"/> и думаю — <prosody rate=\"slow\" pitch=\"-1%\">блин</prosody> — <break time=\"200ms\"/> а вдруг <emphasis level=\"moderate\">и правда</emphasis> похоже на робота? <break time=\"600ms\"/>\n\n<prosody rate=\"medium\" pitch=\"+2%\">Нет, ну вы послушайте</prosody><break time=\"200ms\"/> — разве ИИ может <prosody rate=\"slow\" pitch=\"-2%\">так</prosody> злиться? <break time=\"300ms\"/> Или <prosody rate=\"fast\">так</prosody> смеяться? <break time=\"400ms\"/>\n\n<prosody rate=\"slow\" pitch=\"-3%\">Хотя...</prosody><break time=\"700ms\"/> ладно. <break time=\"300ms\"/> <prosody rate=\"medium\">Может, и может.</prosody>"
+      ],
+      "color": "#222",
+      "bgcolor": "#000"
+    },
+    {
+      "id": 5529,
+      "type": "easy showAnything",
+      "pos": [
+        -2813.0174292524416,
+        5912.4164770891875
+      ],
+      "size": [
+        418.70805255244886,
+        139.41062721172784
+      ],
+      "flags": {},
+      "order": 12,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "anything",
+          "shape": 7,
+          "type": "*",
+          "link": 14543
+        }
+      ],
+      "outputs": [
+        {
+          "name": "output",
+          "type": "*",
+          "links": null
+        }
+      ],
+      "properties": {
+        "ue_properties": {
+          "widget_ue_connectable": {},
+          "input_ue_unconnectable": {},
+          "version": "7.8"
+        },
+        "cnr_id": "comfyui-easy-use",
+        "ver": "1.3.6",
+        "Node name for S&R": "easy showAnything"
+      },
+      "widgets_values": [
+        "Это тестовая запись."
+      ],
+      "color": "#222",
+      "bgcolor": "#000"
+    },
+    {
+      "id": 5530,
+      "type": "PreviewAudio",
+      "pos": [
+        -2785.9869476735535,
+        6560.945177924331
+      ],
+      "size": [
+        373.3771187843539,
+        99.22422296744844
+      ],
+      "flags": {},
+      "order": 13,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "link": 14544
+        }
+      ],
+      "outputs": [
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "links": null
+        }
+      ],
+      "properties": {
+        "ue_properties": {
+          "widget_ue_connectable": {},
+          "input_ue_unconnectable": {},
+          "version": "7.8"
+        },
+        "cnr_id": "comfy-core",
+        "ver": "0.33.1",
+        "Node name for S&R": "PreviewAudio"
+      },
+      "widgets_values": [],
+      "color": "#222",
+      "bgcolor": "#000"
+    },
+    {
+      "id": 5538,
+      "type": "easy showAnything",
+      "pos": [
+        -1387.3760153384756,
+        5913.579862345825
+      ],
+      "size": [
+        695.6226893925887,
+        1036.5503924137593
+      ],
+      "flags": {},
+      "order": 14,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "anything",
+          "shape": 7,
+          "type": "*",
+          "link": 14549
+        }
+      ],
+      "outputs": [
+        {
+          "name": "output",
+          "type": "*",
+          "links": []
+        }
+      ],
+      "properties": {
+        "ue_properties": {
+          "widget_ue_connectable": {},
+          "input_ue_unconnectable": {},
+          "version": "7.8"
+        },
+        "cnr_id": "comfyui-easy-use",
+        "ver": "1.3.6",
+        "Node name for S&R": "easy showAnything"
+      },
+      "widgets_values": [
+        "subject_definitions:\n<Subject 1> is the young woman in the first reference image, with curly blonde hair, green eyes, a thin gold necklace, and a green V-neck ribbed t-shirt, seated in the back seat of a car.\n<Subject 2> is the large dark-grey armored dragon in the second reference image, with sharp spiked ridges along its spine, glowing amber eyes, and textured scales resting on a rocky, mossy terrain.\n<Subject 3> is the red Coca-Cola aluminum can covered in water droplets resting on a bed of ice cubes in the third reference image.\n\nsummary:\n[reference generation] The target video shows <Subject 1> sitting in a moving car, holding out <Subject 3> toward <Subject 2>, which looks down curiously from a rocky cliff, while the wind blows gently through her hair.\n\nretention_analysis:\n<Subject 1> (appears in [Shot 1], [Shot 2]): fully_preserved - the young woman's curly blonde hair, green eyes, thin gold necklace, and green V-neck ribbed t-shirt are retained.\n<Subject 2> (appears in [Shot 1], [Shot 2]): fully_preserved - the large dark-grey armored dragon's spiked ridges, glowing amber eyes, and textured scales are retained.\n<Subject 3> (appears in [Shot 1]): fully_preserved - the red Coca-Cola aluminum can with water droplets is retained.\n\ndetailed_description:\nThe target video uses a cinematic style with bright natural daylight and sharp focus on the characters.\n[Shot 1] A medium shot opens inside a moving car, showing <Subject 1> (S1) seated in the back seat with a soft smile. Her curly blonde hair shifts gently in the breeze from the open window. She extends her right hand forward, holding <Subject 3>, the cold red Coca-Cola can covered in glistening water droplets. <Subject 1> (S1) looks toward the window and says, <d>[English] Look what I brought for you.</d>\n[Shot 2] At 00:04.000, the shot cuts to a wider external view. <Subject 2>, the massive dark-grey armored dragon with spiked ridges and glowing amber eyes, rests on a rugged, moss-covered rocky slope overlooking a winding road. The dragon lowers its massive horned head closer to the car window, sniffing the air with visible curiosity. <Subject 2> lets out a low, rumbling exhale that gently ripples the grass nearby.\n\noverall_soundscape:\nThe ambient sound of rushing highway wind mixed with the deep, vibrating rumble of the dragon's breathing continues throughout the video.\n\nnon_diegetic_music:\nA mysterious and epic orchestral score with light string arrangements and a slow, steady rhythm."
+      ],
+      "color": "#222",
+      "bgcolor": "#000"
+    },
+    {
+      "id": 5525,
+      "type": "Text Multiline",
+      "pos": [
+        -3612.3128892874465,
+        6164.540586251855
+      ],
+      "size": [
+        349.97967782478554,
+        88
+      ],
+      "flags": {
+        "collapsed": false
+      },
+      "order": 2,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "STRING",
+          "type": "STRING",
+          "links": [
+            14550
+          ]
+        }
+      ],
+      "title": "API KEY",
+      "properties": {
+        "ue_properties": {
+          "widget_ue_connectable": {},
+          "input_ue_unconnectable": {},
+          "version": "7.8"
+        },
+        "cnr_id": "was-node-suite-comfyui",
+        "ver": "1.0.2",
+        "Node name for S&R": "Text Multiline"
+      },
+      "widgets_values": [
+        ""
+      ],
+      "color": "#222",
+      "bgcolor": "#000"
+    },
+    {
+      "id": 5528,
+      "type": "Gemini TTS",
+      "pos": [
+        -3203.86219106571,
+        6559.526222468209
+      ],
+      "size": [
+        400,
+        252
+      ],
+      "flags": {},
+      "order": 10,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "text",
+          "type": "STRING",
+          "widget": {
+            "name": "text"
+          },
+          "link": 14541
+        },
+        {
+          "name": "api_key",
+          "shape": 7,
+          "type": "STRING",
+          "widget": {
+            "name": "api_key"
+          },
+          "link": 14551
+        }
+      ],
+      "outputs": [
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "links": [
+            14544
+          ]
+        },
+        {
+          "name": "tts_info",
+          "type": "STRING",
+          "links": []
+        }
+      ],
+      "properties": {
+        "ue_properties": {
+          "widget_ue_connectable": {},
+          "input_ue_unconnectable": {},
+          "version": "7.8"
+        },
+        "Node name for S&R": "Gemini TTS"
+      },
+      "widgets_values": [
+        "Hello, this is a test.",
+        "gemini-3.1-flash-tts-preview",
+        "Leda",
+        1,
+        0,
+        "",
+        ""
+      ],
+      "color": "#222",
+      "bgcolor": "#000"
+    },
+    {
+      "id": 5531,
+      "type": "Text Multiline",
+      "pos": [
+        -3602.3272121634623,
+        6823.977264245895
+      ],
+      "size": [
+        349.97967782478554,
+        88
+      ],
+      "flags": {
+        "collapsed": false
+      },
+      "order": 3,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "STRING",
+          "type": "STRING",
+          "links": [
+            14551
+          ]
+        }
+      ],
+      "title": "API KEY",
+      "properties": {
+        "ue_properties": {
+          "widget_ue_connectable": {},
+          "input_ue_unconnectable": {},
+          "version": "7.8"
+        },
+        "cnr_id": "was-node-suite-comfyui",
+        "ver": "1.0.2",
+        "Node name for S&R": "Text Multiline"
+      },
+      "widgets_values": [
+        ""
+      ],
+      "color": "#222",
+      "bgcolor": "#000"
+    },
+    {
+      "id": 5526,
+      "type": "Gemini 3.x Pro",
+      "pos": [
+        -3240.664262017392,
+        5910.566190639829
+      ],
+      "size": [
+        412.0664304013253,
+        549.5816294589877
+      ],
+      "flags": {},
+      "order": 9,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": null
+        },
+        {
+          "name": "video",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": null
+        },
+        {
+          "name": "audio",
+          "shape": 7,
+          "type": "AUDIO",
+          "link": 14539
+        },
+        {
+          "name": "api_key",
+          "shape": 7,
+          "type": "STRING",
+          "widget": {
+            "name": "api_key"
+          },
+          "link": 14550
+        }
+      ],
+      "outputs": [
+        {
+          "name": "generated_content",
+          "type": "STRING",
+          "links": [
+            14543
+          ]
+        },
+        {
+          "name": "raw_response",
+          "type": "STRING",
+          "links": []
+        },
+        {
+          "name": "usage_info",
+          "type": "STRING",
+          "links": []
+        }
+      ],
+      "properties": {
+        "ue_properties": {
+          "widget_ue_connectable": {},
+          "input_ue_unconnectable": {},
+          "version": "7.8"
+        },
+        "Node name for S&R": "Gemini 3.x Pro"
+      },
+      "widgets_values": [
+        "сделай транскрибцию аудио на русском \n(make the transcribtion of the audio)",
+        "gemini-3.5-flash-lite",
+        "analysis",
+        "",
+        "",
+        "",
+        0.7,
+        8192,
+        0.95,
+        40,
+        false,
+        false,
+        false,
+        ""
+      ],
+      "color": "#222",
+      "bgcolor": "#000"
+    },
+    {
+      "id": 5532,
+      "type": "LoadImage",
+      "pos": [
+        -2362.554363655469,
+        5908.752300334081
+      ],
+      "size": [
+        309.2231619831982,
+        326
+      ],
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            14545
+          ]
+        },
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": null
+        }
+      ],
+      "title": "Image_1",
+      "properties": {
+        "ue_properties": {
+          "widget_ue_connectable": {},
+          "input_ue_unconnectable": {},
+          "version": "7.8"
+        },
+        "cnr_id": "comfy-core",
+        "ver": "0.33.1",
+        "Node name for S&R": "LoadImage"
+      },
+      "widgets_values": [
+        "example.png",
+        "image"
+      ],
+      "color": "#222",
+      "bgcolor": "#000"
+    },
+    {
+      "id": 5533,
+      "type": "LoadImage",
+      "pos": [
+        -2364.017214256059,
+        6277.938770046818
+      ],
+      "size": [
+        309.06640625,
+        314.0000000000009
+      ],
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            14546
+          ]
+        },
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": null
+        }
+      ],
+      "title": "Image_2",
+      "properties": {
+        "ue_properties": {
+          "widget_ue_connectable": {},
+          "input_ue_unconnectable": {},
+          "version": "7.8"
+        },
+        "cnr_id": "comfy-core",
+        "ver": "0.33.1",
+        "Node name for S&R": "LoadImage"
+      },
+      "widgets_values": [
+        "example.png",
+        "image"
+      ],
+      "color": "#222",
+      "bgcolor": "#000"
+    },
+    {
+      "id": 5534,
+      "type": "LoadImage",
+      "pos": [
+        -2362.545865800256,
+        6638.014700858832
+      ],
+      "size": [
+        309.06640625,
+        314
+      ],
+      "flags": {},
+      "order": 6,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            14547
+          ]
+        },
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": null
+        }
+      ],
+      "title": "Image_3",
+      "properties": {
+        "ue_properties": {
+          "widget_ue_connectable": {},
+          "input_ue_unconnectable": {},
+          "version": "7.8"
+        },
+        "cnr_id": "comfy-core",
+        "ver": "0.33.1",
+        "Node name for S&R": "LoadImage"
+      },
+      "widgets_values": [
+        "example.png",
+        "image"
+      ],
+      "color": "#222",
+      "bgcolor": "#000"
+    },
+    {
+      "id": 5535,
+      "type": "LoadImage",
+      "pos": [
+        -2032.5046874986238,
+        6642.029667473249
+      ],
+      "size": [
+        309.06640625,
+        314
+      ],
+      "flags": {},
+      "order": 7,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            14548
+          ]
+        },
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": null
+        }
+      ],
+      "title": "Image_4",
+      "properties": {
+        "ue_properties": {
+          "widget_ue_connectable": {},
+          "input_ue_unconnectable": {},
+          "version": "7.8"
+        },
+        "cnr_id": "comfy-core",
+        "ver": "0.33.1",
+        "Node name for S&R": "LoadImage"
+      },
+      "widgets_values": [
+        "example.png",
+        "image"
+      ],
+      "color": "#222",
+      "bgcolor": "#000"
+    },
+    {
+      "id": 5537,
+      "type": "LoadAudio",
+      "pos": [
+        -1709.1119197288053,
+        6643.340638732603
+      ],
+      "size": [
+        299.0116889150595,
+        309.7334823182973
+      ],
+      "flags": {},
+      "order": 8,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "AUDIO",
+          "type": "AUDIO",
+          "links": []
+        }
+      ],
+      "title": "Ref_audio",
+      "properties": {
+        "ue_properties": {
+          "widget_ue_connectable": {},
+          "input_ue_unconnectable": {},
+          "version": "7.8"
+        },
+        "cnr_id": "comfy-core",
+        "ver": "0.33.1",
+        "Node name for S&R": "LoadAudio"
+      },
+      "widgets_values": [
+        "ComfyUI_00004.mp3",
+        null,
+        null
+      ],
+      "color": "#222",
+      "bgcolor": "#000"
+    },
+    {
+      "id": 5536,
+      "type": "67574b66-9781-4836-9a27-60c3086a71ee",
+      "pos": [
+        -2043.7868292100284,
+        5908.540944700912
+      ],
+      "size": [
+        636.0204412510102,
+        684.3684613716014
+      ],
+      "flags": {},
+      "order": 11,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "image_1",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": 14545
+        },
+        {
+          "name": "image_2",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": 14546
+        },
+        {
+          "name": "image_3",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": 14547
+        },
+        {
+          "name": "image_4",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": 14548
+        },
+        {
+          "name": "image_5",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": null
+        },
+        {
+          "name": "image_6",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": null
+        },
+        {
+          "name": "image_7",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": null
+        },
+        {
+          "name": "image_8",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": null
+        },
+        {
+          "name": "image_9",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": null
+        },
+        {
+          "name": "video",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": null
+        },
+        {
+          "label": "image count ",
+          "name": "inputcount",
+          "type": "INT",
+          "widget": {
+            "name": "inputcount"
+          },
+          "link": null
+        },
+        {
+          "name": "audio",
+          "shape": 7,
+          "type": "AUDIO",
+          "link": null
+        },
+        {
+          "label": "instuction_path",
+          "name": "file_path",
+          "type": "STRING",
+          "widget": {
+            "name": "file_path"
+          },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "generated_content",
+          "type": "STRING",
+          "links": [
+            14549
+          ]
+        }
+      ],
+      "properties": {
+        "ue_properties": {
+          "widget_ue_connectable": {},
+          "input_ue_unconnectable": {}
+        },
+        "cnr_id": "comfy-core",
+        "ver": "0.33.1",
+        "previewExposures": [
+          {
+            "name": "audioUI",
+            "sourceNodeId": "5501",
+            "sourcePreviewName": "audioUI"
+          }
+        ]
+      },
+      "widgets_values": [
+        3,
+        "analysis",
+        "",
+        false,
+        false,
+        "",
+        "gemini-3.5-flash-lite",
+        "C:\\Users\\user\\Downloads\\prompts\\minimax_h3_ref2va_llm_instruction.md"
+      ],
+      "color": "#222",
+      "bgcolor": "#000"
+    }
+  ],
+  "links": [
+    [
+      14539,
+      5524,
+      0,
+      5526,
+      2,
+      "AUDIO"
+    ],
+    [
+      14541,
+      5527,
+      0,
+      5528,
+      0,
+      "STRING"
+    ],
+    [
+      14543,
+      5526,
+      0,
+      5529,
+      0,
+      "STRING"
+    ],
+    [
+      14544,
+      5528,
+      0,
+      5530,
+      0,
+      "AUDIO"
+    ],
+    [
+      14545,
+      5532,
+      0,
+      5536,
+      0,
+      "IMAGE"
+    ],
+    [
+      14546,
+      5533,
+      0,
+      5536,
+      1,
+      "IMAGE"
+    ],
+    [
+      14547,
+      5534,
+      0,
+      5536,
+      2,
+      "IMAGE"
+    ],
+    [
+      14548,
+      5535,
+      0,
+      5536,
+      3,
+      "IMAGE"
+    ],
+    [
+      14549,
+      5536,
+      0,
+      5538,
+      0,
+      "STRING"
+    ],
+    [
+      14550,
+      5525,
+      0,
+      5526,
+      3,
+      "STRING"
+    ],
+    [
+      14551,
+      5531,
+      0,
+      5528,
+      1,
+      "STRING"
+    ]
+  ],
+  "groups": [
+    {
+      "id": 162,
+      "title": "Audio rec group",
+      "bounding": [
+        -3629.631395731458,
+        5839.086095483437,
+        1245.3220190314623,
+        629.5816294589868
+      ],
+      "color": "#88A",
+      "flags": {}
+    },
+    {
+      "id": 163,
+      "title": "Audio gen group",
+      "bounding": [
+        -3629.9612749433654,
+        6480.362820504056,
+        1244.7350933804523,
+        484.54673752709823
+      ],
+      "color": "#88A",
+      "flags": {}
+    },
+    {
+      "id": 164,
+      "title": "Prompt gen group",
+      "bounding": [
+        -2374.017214256059,
+        5838.540944700912,
+        1692.2638883101718,
+        1127.4887227723402
+      ],
+      "color": "#88A",
+      "flags": {}
+    }
+  ],
+  "definitions": {
+    "subgraphs": [
+      {
+        "id": "67574b66-9781-4836-9a27-60c3086a71ee",
+        "version": 1,
+        "state": {
+          "lastGroupId": 164,
+          "lastNodeId": 5538,
+          "lastLinkId": 14560,
+          "lastRerouteId": 99
+        },
+        "revision": 0,
+        "config": {},
+        "name": "New Subgraph",
+        "inputNode": {
+          "id": -10,
+          "bounding": [
+            -8764.696219286945,
+            7955.553761604436,
+            139.83984375,
+            427.9999999999991
+          ]
+        },
+        "outputNode": {
+          "id": -20,
+          "bounding": [
+            -7289.605434647107,
+            7994.522791838271,
+            154.283203125,
+            68
+          ]
+        },
+        "inputs": [
+          {
+            "id": "765b93fc-1c0e-46a7-bcd0-b3a02c84c4d5",
+            "name": "image_1",
+            "type": "IMAGE",
+            "linkIds": [
+              14471
+            ],
+            "localized_name": "image_1",
+            "shape": 7,
+            "pos": [
+              -8648.856375536945,
+              7979.553761604436
+            ]
+          },
+          {
+            "id": "c8a7ddce-af20-43bb-a41e-7e6aa0644e9d",
+            "name": "image_2",
+            "type": "IMAGE",
+            "linkIds": [
+              14474
+            ],
+            "localized_name": "image_2",
+            "shape": 7,
+            "pos": [
+              -8648.856375536945,
+              7999.553761604436
+            ]
+          },
+          {
+            "id": "0415cfd2-9e7a-4bbe-b6aa-4328a35a1b83",
+            "name": "image_3",
+            "type": "IMAGE",
+            "linkIds": [
+              14475
+            ],
+            "localized_name": "image_3",
+            "shape": 7,
+            "pos": [
+              -8648.856375536945,
+              8019.553761604436
+            ]
+          },
+          {
+            "id": "22c41db0-eb14-4a1a-91e4-acaaf83901e8",
+            "name": "image_4",
+            "type": "IMAGE",
+            "linkIds": [
+              14512
+            ],
+            "pos": [
+              -8648.856375536945,
+              8039.553761604436
+            ]
+          },
+          {
+            "id": "959ae3c0-3476-473e-a8e5-10ff3fdebaa9",
+            "name": "image_5",
+            "type": "IMAGE",
+            "linkIds": [
+              14513
+            ],
+            "pos": [
+              -8648.856375536945,
+              8059.553761604436
+            ]
+          },
+          {
+            "id": "f6aa9cb0-d0c7-4511-af95-da891796ed15",
+            "name": "image_6",
+            "type": "IMAGE",
+            "linkIds": [
+              14514
+            ],
+            "pos": [
+              -8648.856375536945,
+              8079.553761604436
+            ]
+          },
+          {
+            "id": "d234ba46-b9d3-4b81-ae83-e535e3af47ef",
+            "name": "image_7",
+            "type": "IMAGE",
+            "linkIds": [
+              14515
+            ],
+            "pos": [
+              -8648.856375536945,
+              8099.553761604436
+            ]
+          },
+          {
+            "id": "9d74ca5e-ddb9-4433-b76f-27343334558d",
+            "name": "image_8",
+            "type": "IMAGE",
+            "linkIds": [
+              14516
+            ],
+            "pos": [
+              -8648.856375536945,
+              8119.553761604436
+            ]
+          },
+          {
+            "id": "e0589827-3201-43cf-9e6a-3d0f07aa092a",
+            "name": "image_9",
+            "type": "IMAGE",
+            "linkIds": [
+              14517
+            ],
+            "pos": [
+              -8648.856375536945,
+              8139.553761604436
+            ]
+          },
+          {
+            "id": "502313f1-b83f-4cf4-aa72-420afff08e6d",
+            "name": "video",
+            "type": "IMAGE",
+            "linkIds": [
+              14518
+            ],
+            "pos": [
+              -8648.856375536945,
+              8159.553761604436
+            ]
+          },
+          {
+            "id": "daf100ed-9a51-42bd-8b0f-245a88401f1a",
+            "name": "inputcount",
+            "type": "INT",
+            "linkIds": [
+              14520
+            ],
+            "label": "image count ",
+            "pos": [
+              -8648.856375536945,
+              8179.553761604436
+            ]
+          },
+          {
+            "id": "f49cdda6-339b-46af-b7d6-e3820c7811dd",
+            "name": "audio",
+            "type": "AUDIO",
+            "linkIds": [
+              14522
+            ],
+            "pos": [
+              -8648.856375536945,
+              8199.553761604435
+            ]
+          },
+          {
+            "id": "d1216aa3-20a0-47a4-a808-5309bd145159",
+            "name": "operation_mode",
+            "type": "COMBO",
+            "linkIds": [
+              14553
+            ],
+            "pos": [
+              -8648.856375536945,
+              8219.553761604435
+            ]
+          },
+          {
+            "id": "62b6b801-7eee-43c5-8149-cc68f5bd4d96",
+            "name": "proxy",
+            "type": "STRING",
+            "linkIds": [
+              14554
+            ],
+            "pos": [
+              -8648.856375536945,
+              8239.553761604435
+            ]
+          },
+          {
+            "id": "fe8907f5-c46c-4ad7-8f64-46c9be19f171",
+            "name": "chat_mode",
+            "type": "BOOLEAN",
+            "linkIds": [
+              14555
+            ],
+            "pos": [
+              -8648.856375536945,
+              8259.553761604435
+            ]
+          },
+          {
+            "id": "4d86ef6c-8262-4a26-a59c-472bd6a1d940",
+            "name": "clear_history",
+            "type": "BOOLEAN",
+            "linkIds": [
+              14556
+            ],
+            "pos": [
+              -8648.856375536945,
+              8279.553761604435
+            ]
+          },
+          {
+            "id": "8c3a1ab1-636c-407e-b607-be60bb39e4dd",
+            "name": "prompt",
+            "type": "STRING",
+            "linkIds": [
+              14558
+            ],
+            "pos": [
+              -8648.856375536945,
+              8299.553761604435
+            ]
+          },
+          {
+            "id": "82b306a5-5879-49bc-a6be-e7383c54ef2c",
+            "name": "model",
+            "type": "COMBO",
+            "linkIds": [
+              14559
+            ],
+            "pos": [
+              -8648.856375536945,
+              8319.553761604435
+            ]
+          },
+          {
+            "id": "6c559390-af0c-4880-b66e-27a052ba8483",
+            "name": "file_path",
+            "type": "STRING",
+            "linkIds": [
+              14560
+            ],
+            "label": "instuction_path",
+            "pos": [
+              -8648.856375536945,
+              8339.553761604435
+            ]
+          }
+        ],
+        "outputs": [
+          {
+            "id": "d763a0e2-c379-43c3-bd5d-303572f4e5ba",
+            "name": "generated_content",
+            "type": "STRING",
+            "linkIds": [
+              14509
+            ],
+            "pos": [
+              -7265.605434647107,
+              8018.522791838271
+            ]
+          }
+        ],
+        "widgets": [],
+        "nodes": [
+          {
+            "id": 5461,
+            "type": "Multi Images Input",
+            "pos": [
+              -8539.328418449732,
+              7896.3124327858695
+            ],
+            "size": [
+              270,
+              358
+            ],
+            "flags": {
+              "collapsed": false
+            },
+            "order": 3,
+            "mode": 0,
+            "inputs": [
+              {
+                "localized_name": "image_1",
+                "name": "image_1",
+                "shape": 7,
+                "type": "IMAGE",
+                "link": 14471
+              },
+              {
+                "localized_name": "image_2",
+                "name": "image_2",
+                "shape": 7,
+                "type": "IMAGE",
+                "link": 14474
+              },
+              {
+                "localized_name": "image_3",
+                "name": "image_3",
+                "shape": 7,
+                "type": "IMAGE",
+                "link": 14475
+              },
+              {
+                "localized_name": "image_4",
+                "name": "image_4",
+                "shape": 7,
+                "type": "IMAGE",
+                "link": 14512
+              },
+              {
+                "localized_name": "image_5",
+                "name": "image_5",
+                "shape": 7,
+                "type": "IMAGE",
+                "link": 14513
+              },
+              {
+                "localized_name": "image_6",
+                "name": "image_6",
+                "shape": 7,
+                "type": "IMAGE",
+                "link": 14514
+              },
+              {
+                "localized_name": "image_7",
+                "name": "image_7",
+                "shape": 7,
+                "type": "IMAGE",
+                "link": 14515
+              },
+              {
+                "localized_name": "image_8",
+                "name": "image_8",
+                "shape": 7,
+                "type": "IMAGE",
+                "link": 14516
+              },
+              {
+                "localized_name": "image_9",
+                "name": "image_9",
+                "shape": 7,
+                "type": "IMAGE",
+                "link": 14517
+              },
+              {
+                "localized_name": "image_10",
+                "name": "image_10",
+                "shape": 7,
+                "type": "IMAGE",
+                "link": null
+              },
+              {
+                "localized_name": "image_11",
+                "name": "image_11",
+                "shape": 7,
+                "type": "IMAGE",
+                "link": null
+              },
+              {
+                "localized_name": "image_12",
+                "name": "image_12",
+                "shape": 7,
+                "type": "IMAGE",
+                "link": null
+              },
+              {
+                "localized_name": "image_13",
+                "name": "image_13",
+                "shape": 7,
+                "type": "IMAGE",
+                "link": null
+              },
+              {
+                "localized_name": "image_14",
+                "name": "image_14",
+                "shape": 7,
+                "type": "IMAGE",
+                "link": null
+              },
+              {
+                "localized_name": "image_15",
+                "name": "image_15",
+                "shape": 7,
+                "type": "IMAGE",
+                "link": null
+              },
+              {
+                "localized_name": "image_16",
+                "name": "image_16",
+                "shape": 7,
+                "type": "IMAGE",
+                "link": null
+              },
+              {
+                "localized_name": "inputcount",
+                "name": "inputcount",
+                "type": "INT",
+                "widget": {
+                  "name": "inputcount"
+                },
+                "link": 14520
+              }
+            ],
+            "outputs": [
+              {
+                "localized_name": "images",
+                "name": "images",
+                "type": "IMAGE",
+                "links": [
+                  14495
+                ]
+              }
+            ],
+            "properties": {
+              "ue_properties": {
+                "widget_ue_connectable": {},
+                "input_ue_unconnectable": {},
+                "version": "7.8"
+              },
+              "Node name for S&R": "Multi Images Input"
+            },
+            "widgets_values": [
+              3
+            ]
+          },
+          {
+            "id": 5517,
+            "type": "Text Multiline",
+            "pos": [
+              -8243.892363279218,
+              8247.428821301337
+            ],
+            "size": [
+              349.97967782478554,
+              88
+            ],
+            "flags": {
+              "collapsed": false
+            },
+            "order": 0,
+            "mode": 0,
+            "inputs": [],
+            "outputs": [
+              {
+                "localized_name": "СТРОКА",
+                "name": "STRING",
+                "type": "STRING",
+                "links": [
+                  14552
+                ]
+              }
+            ],
+            "title": "API key",
+            "properties": {
+              "ue_properties": {
+                "widget_ue_connectable": {},
+                "input_ue_unconnectable": {},
+                "version": "7.8"
+              },
+              "cnr_id": "was-node-suite-comfyui",
+              "ver": "1.0.2",
+              "Node name for S&R": "Text Multiline"
+            },
+            "widgets_values": [
+              ""
+            ],
+            "color": "#cc1414",
+            "bgcolor": "#b80000"
+          },
+          {
+            "id": 5512,
+            "type": "CR Prompt Text",
+            "pos": [
+              -8239.83993636032,
+              7895.860173275057
+            ],
+            "size": [
+              352.2877615416828,
+              129.93759071584736
+            ],
+            "flags": {},
+            "order": 4,
+            "mode": 0,
+            "inputs": [
+              {
+                "localized_name": "prompt",
+                "name": "prompt",
+                "type": "STRING",
+                "widget": {
+                  "name": "prompt"
+                },
+                "link": 14558
+              }
+            ],
+            "outputs": [
+              {
+                "localized_name": "prompt",
+                "name": "prompt",
+                "type": "STRING",
+                "links": [
+                  14557
+                ]
+              },
+              {
+                "localized_name": "show_help",
+                "name": "show_help",
+                "type": "STRING",
+                "links": null
+              }
+            ],
+            "properties": {
+              "ue_properties": {
+                "widget_ue_connectable": {},
+                "input_ue_unconnectable": {}
+              },
+              "cnr_id": "ComfyUI_Comfyroll_CustomNodes",
+              "ver": "d78b780ae43fcf8c6b7c6505e6ffb4584281ceca",
+              "Node name for S&R": "CR Prompt Text"
+            },
+            "widgets_values": [
+              ""
+            ]
+          },
+          {
+            "id": 5456,
+            "type": "Gemini 3.x Pro",
+            "pos": [
+              -7849.943963028733,
+              7891.152245048964
+            ],
+            "size": [
+              412.0664304013253,
+              549.5816294589877
+            ],
+            "flags": {},
+            "order": 2,
+            "mode": 0,
+            "inputs": [
+              {
+                "localized_name": "images",
+                "name": "images",
+                "shape": 7,
+                "type": "IMAGE",
+                "link": 14495
+              },
+              {
+                "localized_name": "video",
+                "name": "video",
+                "shape": 7,
+                "type": "IMAGE",
+                "link": 14518
+              },
+              {
+                "localized_name": "audio",
+                "name": "audio",
+                "shape": 7,
+                "type": "AUDIO",
+                "link": 14522
+              },
+              {
+                "localized_name": "prompt",
+                "name": "prompt",
+                "type": "STRING",
+                "widget": {
+                  "name": "prompt"
+                },
+                "link": 14557
+              },
+              {
+                "localized_name": "model",
+                "name": "model",
+                "type": "COMBO",
+                "widget": {
+                  "name": "model"
+                },
+                "link": 14559
+              },
+              {
+                "localized_name": "operation_mode",
+                "name": "operation_mode",
+                "type": "COMBO",
+                "widget": {
+                  "name": "operation_mode"
+                },
+                "link": 14553
+              },
+              {
+                "localized_name": "system_instruction",
+                "name": "system_instruction",
+                "shape": 7,
+                "type": "STRING",
+                "widget": {
+                  "name": "system_instruction"
+                },
+                "link": 14497
+              },
+              {
+                "localized_name": "api_key",
+                "name": "api_key",
+                "shape": 7,
+                "type": "STRING",
+                "widget": {
+                  "name": "api_key"
+                },
+                "link": 14552
+              },
+              {
+                "localized_name": "proxy",
+                "name": "proxy",
+                "shape": 7,
+                "type": "STRING",
+                "widget": {
+                  "name": "proxy"
+                },
+                "link": 14554
+              },
+              {
+                "localized_name": "chat_mode",
+                "name": "chat_mode",
+                "shape": 7,
+                "type": "BOOLEAN",
+                "widget": {
+                  "name": "chat_mode"
+                },
+                "link": 14555
+              },
+              {
+                "localized_name": "clear_history",
+                "name": "clear_history",
+                "shape": 7,
+                "type": "BOOLEAN",
+                "widget": {
+                  "name": "clear_history"
+                },
+                "link": 14556
+              }
+            ],
+            "outputs": [
+              {
+                "localized_name": "generated_content",
+                "name": "generated_content",
+                "type": "STRING",
+                "links": [
+                  14509
+                ]
+              },
+              {
+                "localized_name": "raw_response",
+                "name": "raw_response",
+                "type": "STRING",
+                "links": []
+              },
+              {
+                "localized_name": "usage_info",
+                "name": "usage_info",
+                "type": "STRING",
+                "links": []
+              }
+            ],
+            "properties": {
+              "ue_properties": {
+                "widget_ue_connectable": {},
+                "input_ue_unconnectable": {},
+                "version": "7.8"
+              },
+              "Node name for S&R": "Gemini 3.x Pro"
+            },
+            "widgets_values": [
+              "",
+              "gemini-3.5-flash-lite",
+              "analysis",
+              "",
+              "",
+              "",
+              0.7,
+              8192,
+              0.95,
+              40,
+              false,
+              false,
+              false,
+              ""
+            ]
+          },
+          {
+            "id": 5433,
+            "type": "Load Text File",
+            "pos": [
+              -8246.778137134348,
+              8097.724400769174
+            ],
+            "size": [
+              354.95869203334223,
+              102
+            ],
+            "flags": {},
+            "order": 1,
+            "mode": 0,
+            "inputs": [
+              {
+                "localized_name": "file_path",
+                "name": "file_path",
+                "type": "STRING",
+                "widget": {
+                  "name": "file_path"
+                },
+                "link": 14560
+              }
+            ],
+            "outputs": [
+              {
+                "localized_name": "СТРОКА",
+                "name": "STRING",
+                "type": "STRING",
+                "links": [
+                  14497
+                ]
+              },
+              {
+                "localized_name": "Словарь",
+                "name": "DICT",
+                "type": "DICT",
+                "links": []
+              }
+            ],
+            "title": "minimax_h3_ref2va_llm_instruction",
+            "properties": {
+              "ue_properties": {
+                "widget_ue_connectable": {},
+                "input_ue_unconnectable": {},
+                "version": "7.8"
+              },
+              "cnr_id": "was-node-suite-comfyui",
+              "ver": "1.0.2",
+              "Node name for S&R": "Load Text File"
+            },
+            "widgets_values": [
+              "C:\\Users\\user\\Downloads\\prompts\\minimax_h3_ref2va_llm_instruction.md",
+              "[filename]"
+            ]
+          }
+        ],
+        "groups": [],
+        "links": [
+          {
+            "id": 14495,
+            "origin_id": 5461,
+            "origin_slot": 0,
+            "target_id": 5456,
+            "target_slot": 0,
+            "type": "IMAGE"
+          },
+          {
+            "id": 14497,
+            "origin_id": 5433,
+            "origin_slot": 0,
+            "target_id": 5456,
+            "target_slot": 6,
+            "type": "STRING"
+          },
+          {
+            "id": 14471,
+            "origin_id": -10,
+            "origin_slot": 0,
+            "target_id": 5461,
+            "target_slot": 0,
+            "type": "IMAGE"
+          },
+          {
+            "id": 14474,
+            "origin_id": -10,
+            "origin_slot": 1,
+            "target_id": 5461,
+            "target_slot": 1,
+            "type": "IMAGE"
+          },
+          {
+            "id": 14475,
+            "origin_id": -10,
+            "origin_slot": 2,
+            "target_id": 5461,
+            "target_slot": 2,
+            "type": "IMAGE"
+          },
+          {
+            "id": 14509,
+            "origin_id": 5456,
+            "origin_slot": 0,
+            "target_id": -20,
+            "target_slot": 0,
+            "type": "STRING"
+          },
+          {
+            "id": 14512,
+            "origin_id": -10,
+            "origin_slot": 3,
+            "target_id": 5461,
+            "target_slot": 3,
+            "type": "IMAGE"
+          },
+          {
+            "id": 14513,
+            "origin_id": -10,
+            "origin_slot": 4,
+            "target_id": 5461,
+            "target_slot": 4,
+            "type": "IMAGE"
+          },
+          {
+            "id": 14514,
+            "origin_id": -10,
+            "origin_slot": 5,
+            "target_id": 5461,
+            "target_slot": 5,
+            "type": "IMAGE"
+          },
+          {
+            "id": 14515,
+            "origin_id": -10,
+            "origin_slot": 6,
+            "target_id": 5461,
+            "target_slot": 6,
+            "type": "IMAGE"
+          },
+          {
+            "id": 14516,
+            "origin_id": -10,
+            "origin_slot": 7,
+            "target_id": 5461,
+            "target_slot": 7,
+            "type": "IMAGE"
+          },
+          {
+            "id": 14517,
+            "origin_id": -10,
+            "origin_slot": 8,
+            "target_id": 5461,
+            "target_slot": 8,
+            "type": "IMAGE"
+          },
+          {
+            "id": 14518,
+            "origin_id": -10,
+            "origin_slot": 9,
+            "target_id": 5456,
+            "target_slot": 1,
+            "type": "IMAGE"
+          },
+          {
+            "id": 14520,
+            "origin_id": -10,
+            "origin_slot": 10,
+            "target_id": 5461,
+            "target_slot": 16,
+            "type": "INT"
+          },
+          {
+            "id": 14522,
+            "origin_id": -10,
+            "origin_slot": 11,
+            "target_id": 5456,
+            "target_slot": 2,
+            "type": "AUDIO"
+          },
+          {
+            "id": 14552,
+            "origin_id": 5517,
+            "origin_slot": 0,
+            "target_id": 5456,
+            "target_slot": 7,
+            "type": "STRING"
+          },
+          {
+            "id": 14553,
+            "origin_id": -10,
+            "origin_slot": 12,
+            "target_id": 5456,
+            "target_slot": 5,
+            "type": "COMBO"
+          },
+          {
+            "id": 14554,
+            "origin_id": -10,
+            "origin_slot": 13,
+            "target_id": 5456,
+            "target_slot": 8,
+            "type": "STRING"
+          },
+          {
+            "id": 14555,
+            "origin_id": -10,
+            "origin_slot": 14,
+            "target_id": 5456,
+            "target_slot": 9,
+            "type": "BOOLEAN"
+          },
+          {
+            "id": 14556,
+            "origin_id": -10,
+            "origin_slot": 15,
+            "target_id": 5456,
+            "target_slot": 10,
+            "type": "BOOLEAN"
+          },
+          {
+            "id": 14557,
+            "origin_id": 5512,
+            "origin_slot": 0,
+            "target_id": 5456,
+            "target_slot": 3,
+            "type": "STRING"
+          },
+          {
+            "id": 14558,
+            "origin_id": -10,
+            "origin_slot": 16,
+            "target_id": 5512,
+            "target_slot": 0,
+            "type": "STRING"
+          },
+          {
+            "id": 14559,
+            "origin_id": -10,
+            "origin_slot": 17,
+            "target_id": 5456,
+            "target_slot": 4,
+            "type": "COMBO"
+          },
+          {
+            "id": 14560,
+            "origin_id": -10,
+            "origin_slot": 18,
+            "target_id": 5433,
+            "target_slot": 0,
+            "type": "STRING"
+          }
+        ],
+        "extra": {
+          "ue_links": [],
+          "links_added_by_ue": []
+        }
+      }
+    ]
+  },
+  "config": {},
+  "extra": {
+    "ue_links": [],
+    "ds": {
+      "scale": 0.6761684386256933,
+      "offset": [
+        3348.5036182953218,
+        -5361.736908579118
+      ]
+    },
+    "anomalous_hashes": {},
+    "frontendVersion": "1.48.7",
+    "VHS_latentpreview": false,
+    "VHS_latentpreviewrate": 0,
+    "VHS_MetadataImage": true,
+    "VHS_KeepIntermediate": true
+  },
+  "version": 0.4
+}
