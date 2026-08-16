@@ -46,7 +46,7 @@
 
 ```bash
 cd ComfyUI/custom_nodes
-git clone https://github.com/yourusername/ComfyUI-Gemini_3x_Pro.git
+git clone https://github.com/asirusasr-maker/ComfyUI-Gemini_3x_Pro.git
 cd ComfyUI-Gemini_3x_Pro
 ```
 
