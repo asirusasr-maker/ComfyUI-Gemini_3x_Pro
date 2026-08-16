@@ -1,0 +1,11 @@
+{
+    "GEMINI_API_KEY": "your_api_key_here",
+    "DEFAULT_MODEL": "gemini-3.7-flash",
+    "DEFAULT_IMAGE_MODEL": "gemini-3.1-flash-image",
+    "DEFAULT_VIDEO_MODEL": "veo-3.1-generate-preview",
+    "DEFAULT_TTS_MODEL": "gemini-3.1-flash-tts-preview",
+    "PROXY": "",
+    "RPM_LIMIT": 15,
+    "TPM_LIMIT": 1000000,
+    "RPD_LIMIT": 1500
+}
