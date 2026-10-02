@@ -1,411 +1,236 @@
-# 🧠 ComfyUI-Gemini_3x_Pro
+# ComfyUI-Gemini_3x_Pro v2.0
 
-[![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
-[![ComfyUI](https://img.shields.io/badge/ComfyUI-0.33+-green.svg)](https://github.com/comfyanonymous/ComfyUI)
-[![Google GenAI](https://img.shields.io/badge/google--genai-2.x-orange.svg)](https://pypi.org/project/google-genai/)
-[![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE)
+Advanced Gemini 3.x / Nano Banana / Veo / Omni nodes for ComfyUI, updated for the current Google Gemini API model catalog available in October 2026.
 
-> **Advanced Gemini 3.x nodes for ComfyUI** — multimodal AI pipeline with text, image, audio, video, TTS, live chat, and audio recording. Built on the latest `google-genai` SDK (v2.x) with full support for Gemini 3.x series models.
+## What changed in v2.0
 
----
+- Automatic fallback for transient API failures (`408`, `429`, `500`, `502`, `503`, `504`).
+- Exponential backoff with jitter and bounded retries.
+- Short per-model cooldown after repeated temporary failures, so an overloaded model is skipped on the next request for a short period.
+- The selected model is always tried first; fallback proceeds downward through the configured family.
+- Authentication/client errors such as `401` and `403` are not blindly retried.
+- Explicit automatic function calling (AFC) is disabled for the core node, removing the SDK AFC warning when ordinary `generate_content` is used. Search grounding remains available as a server-side built-in tool.
+- Current text model IDs: Gemini 3.8 Flash, 3.7 Flash, 3.6 Flash, 3.5 Flash, 3.5 Flash-Lite, 3.1 Flash-Lite, plus Gemini 3.1 Pro Preview.
+- Current image model IDs: Nano Banana Pro, Nano Banana 2, Nano Banana 2 Lite.
+- Current TTS model IDs: Gemini 3.8 Flash TTS and Gemini 3.8 Flash-Lite TTS.
+- Current Live API model IDs: Gemini 3.8 Live and Gemini 3.8 Live Extended Thinking.
+- Current video choices: Veo 3.1, Veo 3.1 Fast, Veo 3.1 Lite, and Gemini Omni 1.1 Flash.
+- Video node now actually saves generated MP4 files and decodes them to ComfyUI IMAGE frames when `ffmpeg` is available.
+- Live Audio Chat is no longer a placeholder: it creates a real Live API WebSocket session for each node execution.
+- Audio recorder now honors the selected input device and enforces a configurable maximum duration.
+- Structured JSON and Google Search grounding remain supported.
 
-## 📑 Table of Contents
+## Current model catalog used by this release
 
-- [Features](#-features)
-- [Installation](#-installation)
-- [Dependencies](#-dependencies)
-- [API Key Setup](#-api-key-setup)
-- [Nodes Overview](#-nodes-overview)
-- [Available Models & Rate Limits](#-available-models--rate-limits)
-- [Proxy Configuration](#-proxy-configuration)
-- [Chat Mode](#-chat-mode)
-- [Important Notes](#-important-notes)
-- [Troubleshooting](#-troubleshooting)
-- [License](#-license)
+| Family | Models |
+|---|---|
+| Text / multimodal | `gemini-3.8-flash`, `gemini-3.7-flash`, `gemini-3.6-flash`, `gemini-3.5-flash`, `gemini-3.5-flash-lite`, `gemini-3.1-flash-lite`, `gemini-3.1-pro-preview` |
+| Image | `gemini-3-pro-image`, `gemini-3.1-flash-image`, `gemini-3.1-flash-lite-image` |
+| TTS | `gemini-3.8-flash-tts`, `gemini-3.8-flash-lite-tts` |
+| Live | `gemini-3.8-live`, `gemini-3.8-live-extended-thinking` |
+| Video | `veo-3.1-generate-preview`, `veo-3.1-fast-generate-preview`, `veo-3.1-lite-generate-preview`, `gemini-omni-1.1-flash` |
 
----
+The model list is based on Google's current Gemini API model page, last updated 1 October 2026. Stable models are preferred for production; preview endpoints are retained only where Google's current catalog still lists them. See the official links below.
 
-## ✨ Features
+## Fallback behavior
 
-- 🧠 **Multimodal Analysis** — text + images + audio + video in a single prompt
-- 🎨 **Native Image Generation** — Gemini Nano Banana models (requires Paid tier)
-- 🎬 **Video Generation** — Veo 3.1 preview (requires Paid tier)
-- 🔊 **Text-to-Speech** — 8 voices, raw PCM/L16/MP3 auto-detection
-- 🎙️ **Live Audio Chat** — placeholder for real-time streaming
-- 🎤 **Audio Recorder** — built-in microphone recording with silence detection
-- 📸 **Multi Images Input** — aggregate up to 16 images into one batch
-- 💬 **Persistent Chat Mode** — conversation history survives between workflow runs
-- 🔍 **Search Grounding** — real-time Google Search integration (select models)
-- 📐 **Structured JSON Output** — schema-validated responses
+### Text / multimodal
 
----
-
-## 🚀 Installation
-
-### Method 1: Git Clone (Recommended)
-
-```bash
-cd ComfyUI/custom_nodes
-git clone https://github.com/asirusasr-maker/ComfyUI-Gemini_3x_Pro.git
-cd ComfyUI-Gemini_3x_Pro
+```text
+gemini-3.8-flash
+    ↓ transient error
+ gemini-3.7-flash
+    ↓
+gemini-3.6-flash
+    ↓
+gemini-3.5-flash
+    ↓
+gemini-3.5-flash-lite
+    ↓
+gemini-3.1-flash-lite
 ```
 
-For **portable** ComfyUI:
-```bash
-..\..\python_embeded\python.exe -m pip install -r requirements.txt
+When `gemini-3.1-pro-preview` is selected, v2 tries Pro first and then falls back into the Flash family.
+
+### Image
+
+```text
+gemini-3-pro-image
+    ↓
+gemini-3.1-flash-image
+    ↓
+gemini-3.1-flash-lite-image
 ```
 
-For **standard** ComfyUI:
-```bash
-pip install -r requirements.txt
+### TTS
+
+```text
+gemini-3.8-flash-tts
+    ↓
+gemini-3.8-flash-lite-tts
 ```
 
-### Method 2: ComfyUI Manager
+### Video
 
-1. Open ComfyUI → **Manager** → **Install Custom Nodes**
-2. Click **Load From File** → select the downloaded ZIP
-3. Restart ComfyUI
-
----
-
-## 📦 Dependencies
-
-All required packages are listed in `requirements.txt`:
-
-```
-google-genai>=2.0.0
-pillow>=10.0.0
-numpy>=1.24.0
-sounddevice>=0.4.0
+```text
+veo-3.1-generate-preview
+    ↓
+veo-3.1-fast-generate-preview
+    ↓
+veo-3.1-lite-generate-preview
+    ↓
+gemini-omni-1.1-flash
 ```
 
-| Package | Version | Purpose |
-|---------|---------|---------|
-| `google-genai` | `>=2.0.0` | **Required.** Official Google GenAI SDK v2 |
-| `pillow` | `>=10.0.0` | Image processing |
-| `numpy` | `>=1.24.0` | Tensor operations |
-| `sounddevice` | `>=0.4.0` | Microphone input (Audio Recorder) |
+When Omni is selected, v2 tries Omni first and then falls back to Veo Fast/Lite.
 
-> 💡 `torch` and `torchaudio` are **not** in `requirements.txt` because ComfyUI already provides them. Installing them separately could overwrite your CUDA-enabled PyTorch with a CPU-only version.
+## Retry policy
 
----
+The plugin retries only transient failures. `401`, `403`, normal `400` request errors, and other permanent client errors are surfaced immediately. A model-not-found/unavailable error is treated as a model fallback signal.
 
-## 🔑 API Key Setup
+Default values:
 
-1. Go to **[Google AI Studio](https://aistudio.google.com/app/apikey)**
-2. Click **"Create API Key"**
-3. Copy the key
+```text
+retries_per_model = 1
+cooldown_seconds = 30
+backoff initial = 1.5s
+backoff max = 12s
+```
 
-### Option A: Config File
-Edit `config.json` in the node folder:
+The exact sleep includes random jitter to avoid synchronized retry bursts.
+
+## AFC
+
+The core multimodal node explicitly sets:
+
+```python
+AutomaticFunctionCallingConfig(disable=True)
+```
+
+The node does not expose local Python functions as model tools, so AFC is not needed for ordinary multimodal analysis. Google Search grounding remains an explicit server-side tool option.
+
+## Installation
+
+1. Remove or rename the old `ComfyUI-Gemini_3x_Pro` directory.
+2. Extract this folder as:
+
+```text
+ComfyUI/custom_nodes/ComfyUI-Gemini_3x_Pro
+```
+
+3. Put your Gemini API key into `config.json` or set `GEMINI_API_KEY` in the environment.
+4. With portable ComfyUI, install dependencies using its embedded Python:
+
+```bat
+python_embeded\\python.exe -m pip install -r ComfyUI\\custom_nodes\\ComfyUI-Gemini_3x_Pro\\requirements.txt
+```
+
+5. Restart ComfyUI.
+
+## Configuration
+
+`config.json` contains safe defaults and no real key:
+
 ```json
 {
-    "GEMINI_API_KEY": "your_api_key_here"
+  "GEMINI_API_KEY": "your_api_key_here",
+  "DEFAULT_MODEL": "gemini-3.8-flash",
+  "DEFAULT_IMAGE_MODEL": "gemini-3.1-flash-image",
+  "DEFAULT_VIDEO_MODEL": "veo-3.1-generate-preview",
+  "DEFAULT_TTS_MODEL": "gemini-3.8-flash-tts",
+  "DEFAULT_LIVE_MODEL": "gemini-3.8-live",
+  "PROXY": "",
+  "FALLBACK_ENABLED": true,
+  "RETRIES_PER_MODEL": 1,
+  "COOLDOWN_SECONDS": 30,
+  "BACKOFF_INITIAL_SECONDS": 1.5,
+  "BACKOFF_MAX_SECONDS": 12,
+  "SDK_RETRY_ATTEMPTS": 1
 }
 ```
 
-### Option B: Environment Variable
-```bash
-set GEMINI_API_KEY=your_api_key_here
+## Nodes
+
+### 🧠 Gemini 3.x Pro Multimodal v2
+
+Text + image + audio + ComfyUI video-frame input. Supports analysis, persistent chat, structured JSON and optional Google Search grounding.
+
+Important: the `video` input is retained for workflow compatibility and represents an IMAGE tensor of sampled frames; it is not a true video upload. For actual video generation, use the Video node.
+
+### 🎨 Gemini Image Generation v2
+
+Uses Nano Banana image models through the current Interactions API. Supports reference images, aspect ratio, 1K/2K/4K response size, and sequential generation of up to four requested images.
+
+### 🎬 Gemini Video Generation v2
+
+Supports Veo 3.1 family and Gemini Omni 1.1 Flash. Veo uses the standard asynchronous video operation flow and Omni uses Interactions API.
+
+The node stores the MP4 in ComfyUI's temp directory and exposes its local path in `video_info`. When `ffmpeg`/`ffprobe` are available, it also returns a decoded IMAGE batch.
+
+### 🔊 Gemini Text-to-Speech v2
+
+Uses current Gemini 3.8 TTS models. The node requests 24 kHz PCM for deterministic decoding and supports style instructions, voice selection, speed and pitch guidance.
+
+### 🎙️ Gemini Live Audio Chat v2
+
+Uses `gemini-3.8-live` or `gemini-3.8-live-extended-thinking` through the asynchronous Live API. Each execution opens a short-lived Live session, sends text and/or audio, collects audio output and output transcription, and closes the session.
+
+### 🎤 Audio Recorder Gemini v2
+
+Microphone recorder with device selection, silence stop, and maximum-duration protection.
+
+### 📸 Multi Images Input v2
+
+Combines up to 16 image inputs into one batched IMAGE tensor.
+
+## Compatibility
+
+The package targets ComfyUI Python environments that already provide PyTorch. `torch`/`torchaudio` are deliberately not installed by this package so a portable CUDA environment is not overwritten.
+
+`google-genai` is pinned to the 2.x line:
+
+```text
+google-genai>=2.27.0,<3.0
 ```
 
-### Option C: Node Input
-Paste the key directly into the `api_key` widget of any node.
+## Troubleshooting
 
----
+### `401 UNAUTHENTICATED`
 
-## 🧩 Nodes Overview
+The request is not authenticated. Recreate/verify the Google AI Studio API key and ensure the node is actually reading the intended key. v2 does not retry authentication failures.
 
-> 📷 **Screenshots:** Place your node screenshots in `docs/images/` folder to match the paths below.
+### `503 UNAVAILABLE`
 
----
+This is treated as a transient capacity/backend issue. v2 retries the selected model and then switches to the next fallback model automatically.
 
-### 🧠 Gemini 3.x Pro Multimodal
+### `429 RESOURCE_EXHAUSTED`
 
-<img src="docs/images/gemini_3x_pro.png" width="400" alt="Gemini 3.x Pro Multimodal">
+Also treated as transient. v2 backs off and then switches models when required.
 
-The core multimodal node. Accepts **text, images, video, and audio** simultaneously.
+### Video returns a placeholder frame
 
-**Inputs:**
-| Name | Type | Description |
-|------|------|-------------|
-| `prompt` | STRING | Main text prompt |
-| `images` | IMAGE | One or multiple images |
-| `video` | IMAGE | Video frames (up to 16) |
-| `audio` | AUDIO | Audio waveform (dict) |
-| `system_instruction` | STRING | System prompt |
-| `model` | COMBO | Select Gemini model |
-| `operation_mode` | COMBO | `analysis` / `chat` / `structured_json` |
-| `temperature` | FLOAT | 0.0 – 2.0 |
-| `max_output_tokens` | INT | Up to 65536 |
-| `use_search_grounding` | BOOLEAN | Enable Google Search |
-| `chat_mode` | BOOLEAN | Enable persistent chat |
-| `clear_history` | BOOLEAN | Reset conversation |
-| `json_schema` | STRING | JSON schema for structured output |
+The MP4 was generated successfully, but `ffmpeg`/`ffprobe` are not visible to the ComfyUI process. The real local MP4 path remains available in `video_info`.
 
-**Outputs:** `generated_content`, `raw_response`, `usage_info`
+### Live Audio Chat fails
 
----
+Check that `websockets` is installed through `google-genai`, the API key is valid, and outbound WebSocket traffic is allowed by your network/proxy.
 
-### 🎨 Gemini Image Generation
+## Official documentation used for v2
 
-<img src="docs/images/gemini_image_gen.png" width="400" alt="Gemini Image Generation">
+- Gemini models: https://ai.google.dev/gemini-api/docs/models
+- Gemini 3.8 Flash: https://ai.google.dev/gemini-api/docs/models/gemini-3.8-flash
+- Image generation / Nano Banana: https://ai.google.dev/gemini-api/docs/image-generation
+- Veo 3.1: https://ai.google.dev/gemini-api/docs/veo
+- Gemini Omni Flash: https://ai.google.dev/gemini-api/docs/omni
+- TTS: https://ai.google.dev/gemini-api/docs/speech-generation
+- Live API: https://ai.google.dev/gemini-api/docs/live-api/get-started-sdk
+- Deprecations: https://ai.google.dev/gemini-api/docs/deprecations
+- Google GenAI Python SDK: https://googleapis.github.io/python-genai/
 
-Generates images using Google\'s **Nano Banana** models via the Interactions API.
+## License
 
-**Inputs:**
-| Name | Type | Description |
-|------|------|-------------|
-| `prompt` | STRING | Image description |
-| `model` | COMBO | `gemini-3.1-flash-image`, `gemini-3-pro-image`, etc. |
-| `aspect_ratio` | COMBO | `1:1`, `16:9`, `9:16`, `4:3`, `3:4`, `21:9` |
-| `reference_image` | IMAGE | Style/character reference |
-| `negative_prompt` | STRING | What to avoid |
-| `num_images` | INT | 1 – 4 |
+Apache-2.0. See `LICENSE`.
 
-**Outputs:** `generated_images`, `generation_info`, `raw_response`
+### Audio Recorder queue fix (v2.0.5)
 
-> ⚠️ **Requires Paid tier.** On Free tier the rate limit is `0/0` — the node will return a black placeholder.
-
----
-
-### 🎬 Gemini Video Generation
-
-<img src="docs/images/gemini_video_gen.png" width="400" alt="Gemini Video Generation">
-
-Generates video clips using **Veo 3.1**.
-
-**Inputs:**
-| Name | Type | Description |
-|------|------|-------------|
-| `prompt` | STRING | Video description |
-| `model` | COMBO | `veo-3.1-generate-preview`, `veo-3.1-lite-generate-preview` |
-| `duration` | COMBO | `3s`, `5s`, `8s`, `10s` |
-| `aspect_ratio` | COMBO | `16:9`, `9:16`, `1:1` |
-| `reference_image` | IMAGE | First frame reference |
-
-**Outputs:** `video_frames`, `video_info`, `raw_response`
-
-> ⚠️ **Requires Paid tier.** Free tier has no access to Veo models.
-
----
-
-### 🔊 Gemini Text-to-Speech
-
-<img src="docs/images/gemini_tts.png" width="400" alt="Gemini TTS">
-
-Converts text to speech using Gemini TTS models. Auto-detects `audio/l16`, `audio/mp3`, and `audio/wav` formats from API.
-
-**Inputs:**
-| Name | Type | Description |
-|------|------|-------------|
-| `text` | STRING | Text to speak |
-| `model` | COMBO | `gemini-3.1-flash-tts-preview` |
-| `voice` | COMBO | `Puck`, `Charon`, `Kore`, `Fenrir`, `Leda`, `Orus`, `Aoede`, `Callirhoe` |
-| `speed` | FLOAT | Playback speed (0.5 – 2.0) |
-| `pitch` | FLOAT | Pitch shift (-10 – +10) |
-
-**Outputs:** `audio` (ComfyUI AUDIO dict), `tts_info`
-
----
-
-### 🎙️ Gemini Live Audio Chat
-
-<img src="docs/images/gemini_audio_chat.png" width="400" alt="Gemini Live Audio Chat">
-
-Placeholder node for future **Live API** (WebSocket/async streaming) integration.
-
-**Inputs:** `text_input`, `system_prompt`, `audio_input`
-
-**Outputs:** `audio_output`, `text_response`, `session_info`
-
-> 📝 Currently returns placeholder audio. Full implementation requires asyncio WebSocket.
-
----
-
-### 🎤 Audio Recorder Gemini
-
-<img src="docs/images/audio_recorder.png" width="400" alt="Audio Recorder">
-
-Records audio from your microphone with **silence detection**. Click the **🎤 Start Recording** button — recording stops automatically after `silence_duration` seconds of silence (or 10 sec max).
-
-**Inputs:**
-| Name | Type | Description |
-|------|------|-------------|
-| `device` | COMBO | Microphone device |
-| `sample_rate` | INT | 8000 – 96000 Hz |
-| `silence_threshold` | FLOAT | Amplitude threshold (0.001 – 0.1) |
-| `silence_duration` | FLOAT | Stop after N seconds of silence |
-
-**Outputs:** `audio` (ComfyUI AUDIO dict)
-
----
-
-### 📸 Multi Images Input
-
-<img src="docs/images/multi_images.png" width="400" alt="Multi Images Input">
-
-Aggregates up to **16 individual images** into a single batched tensor.
-
-**Inputs:** `image_1` … `image_16` (optional)
-
-**Outputs:** `images` (batched IMAGE tensor)
-
----
-
-## 🚦 Available Models & Rate Limits
-
-> All limits are for **Free tier** unless noted. Paid tier limits are significantly higher.
-
-### 🧠 Text / Multimodal Models
-
-| Model | RPM | TPM | RPD | Search Grounding | Status |
-|-------|-----|-----|-----|------------------|--------|
-| `gemini-3.7-flash` | 15 | 1M | 1500 | ❌ | ✅ GA |
-| `gemini-3.6-flash` | 15 | 1M | 1500 | ❌ | ✅ GA |
-| `gemini-3.5-flash` | 15 | 1M | 1500 | ❌ | ✅ GA |
-| `gemini-3.5-flash-lite` | 15 | 1M | 1500 | ✅ 500/day | ✅ GA |
-| `gemini-3.1-flash-lite` | 15 | 1M | 1500 | ❌ | ✅ GA |
-| `gemini-3.1-pro` | 15 | 1M | 1500 | ❌ | ✅ GA |
-| `gemini-3.1-flash-live-preview` | 15 | 1M | 1500 | ❌ | 🔬 Preview |
-| `gemini-flash-latest` | 15 | 1M | 1500 | ❌ | ✅ Alias |
-| `gemini-pro-latest` | 15 | 1M | 1500 | ❌ | ✅ Alias |
-
-### 🎨 Image Generation (Nano Banana)
-
-| Model | Free Tier | Paid Tier | Status |
-|-------|-----------|-----------|--------|
-| `gemini-3.1-flash-image` | **0/0** ❌ | ✅ ~$0.01–0.04/img | ✅ GA |
-| `gemini-3-pro-image` | **0/0** ❌ | ✅ ~$0.01–0.04/img | ✅ GA |
-| `gemini-3.1-flash-lite-image` | **0/0** ❌ | ✅ ~$0.01–0.04/img | ✅ GA |
-
-> ⚠️ On Free tier these models return **429 RESOURCE_EXHAUSTED**. The node will output a black placeholder + error text instead of crashing.
-
-### 🎬 Video Generation (Veo)
-
-| Model | Free Tier | Paid Tier | Status |
-|-------|-----------|-----------|--------|
-| `veo-3.1-generate-preview` | **0/0** ❌ | ✅ Paid | 🔬 Preview |
-| `veo-3.1-lite-generate-preview` | **0/0** ❌ | ✅ Paid | 🔬 Preview |
-| `gemini-omni-flash` | **0/0** ❌ | ✅ Paid | 🔬 Preview |
-
-### 🔊 Text-to-Speech
-
-| Model | RPM | TPM | RPD | Status |
-|-------|-----|-----|-----|--------|
-| `gemini-3.1-flash-tts-preview` | 3 | 10K | 10 | 🔬 Preview |
-
----
-
-## 🌐 Proxy Configuration
-
-The `proxy` field allows routing API requests through an intermediary server.
-
-**Why use a proxy?**
-- **Regional blocks** — Google AI Studio may be unavailable in your country
-- **Faster routing** — connect through a closer server
-- **Privacy** — hide your direct IP
-
-**Format:**
-```
-http://ip:port
-http://user:pass@proxy.com:3128
-```
-
-Leave empty if Google API is directly accessible in your region.
-
----
-
-## 💬 Chat Mode
-
-Enable persistent conversations that **survive between workflow runs**.
-
-### How to use
-
-1. Set `chat_mode: true`
-2. Send your first prompt → Gemini responds
-3. **Change only the prompt** → keep `chat_mode: true`
-4. Gemini remembers the previous context and answers accordingly
-5. Set `clear_history: true` → Queue → starts a **fresh conversation**
-
-### Example Workflow
-
-| Step | Prompt | chat_mode | clear_history | Result |
-|------|--------|-----------|---------------|--------|
-| 1 | "Tell me about Uzbekistan" | true | false | Full description |
-| 2 | "What is the capital?" | true | false | "Tashkent" (remembers context!) |
-| 3 | "Explain quantum physics" | true | **true** | New topic, no memory of Uzbekistan |
-
-> 📝 History is stored **per model** in RAM. If you restart ComfyUI, history resets.
-
----
-
-## ⚠️ Important Notes
-
-### 1. Image & Video Generation = Paid Only
-As of August 2026, Google has set **0/0 rate limits** for Image Generation and Video Generation on the Free tier. You **must** attach a billing card in [Google AI Studio](https://aistudio.google.com/app/apikey) to use these features.
-
-**Alternative for Free users:**
-- Use **Stable Diffusion / SDXL / Flux** inside ComfyUI for images
-- Use **MiniMax H3** or other local video models for video
-
-### 2. Search Grounding Limitations
-- `gemini-3.1-flash-lite` + Search Grounding = **429 error** on Free tier
-- Use `gemini-3.5-flash-lite` or `gemini-2.0-flash` (if still active) for free search
-- Or disable `use_search_grounding` entirely
-
-### 3. Deprecated Parameters
-For Gemini 3.x models, `temperature`, `top_p`, and `top_k` are marked **deprecated** by Google but still functional. They may be removed in future API versions.
-
-### 4. Audio Format
-The node accepts ComfyUI\'s native `AUDIO` dict (`{"waveform": tensor, "sample_rate": int}`). Audio is automatically converted to WAV and sent to Gemini as `types.Part.from_bytes()`.
-
----
-
-## 🔧 Troubleshooting
-
-| Problem | Cause | Solution |
-|---------|-------|----------|
-| `google-genai not installed` | Missing dependency | `pip install -r requirements.txt` |
-| `No API key` | Key not set | Add to `config.json` or node input |
-| `429 Too Many Requests` | Rate limit exceeded | Wait 1 minute; check model limits |
-| `429 with Image Gen` | Free tier blocked | Upgrade to Paid tier |
-| `'dict' object has no attribute 'cpu'` | Old node version | Update to v14+ |
-| `Input should be a valid dictionary` | Audio as dict not Part | Update to v14+ |
-| Chat history resets | Different prompt changes hash | Update to v9+ (fixed session ID) |
-| Black image output | Image Gen on Free tier | Normal — API limit is 0/0 |
-| TTS returns silence | Audio format mismatch | Update to v7+ (L16/MP3/WAV support) |
-
----
-
-## 📄 License
-
-Licensed under the Apache License, Version 2.0. See [LICENSE](LICENSE) for details.
-
-```
-Copyright 2026 ComfyUI-Gemini_3x_Pro Contributors
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-```
-
----
-
-## 🙏 Credits
-
-- Built on [Google GenAI SDK](https://github.com/googleapis/python-genai)
-- Inspired by [ComfyUI-Gemini_Flash_2.0_Exp](https://github.com/ShmuelRonen/ComfyUI-Gemini_Flash_2.0_Exp) by ShmuelRonen
-- Audio Recorder based on community nodes with silence detection
-
----
-
-*Last updated: August 2026*
+`Gemini Audio Recorder` is a valid `OUTPUT_NODE`. The **🔴 Start Record** button increments the serialized `trigger` input and queues the current workflow through the ComfyUI app queue API, avoiding `prompt_no_outputs` when the recorder is the only output node. The button is a native canvas widget and follows node resizing.

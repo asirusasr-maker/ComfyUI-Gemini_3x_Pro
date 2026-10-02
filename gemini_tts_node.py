@@ -1,53 +1,50 @@
-"""
-Gemini Text-to-Speech Node
-Handles audio/l16 (raw PCM), MP3, WAV from Gemini TTS API
-Returns proper ComfyUI AUDIO dict format
-"""
+"""Gemini 3.8 TTS node using the current Interactions API."""
+from __future__ import annotations
 
-import os
-import json
 import io
-import re
-import torch
+import json
+import wave
+
 import numpy as np
+import torch
 
-try:
-    from google import genai
-    from google.genai import types
-    HAS_GENAI = True
-except ImportError:
-    HAS_GENAI = False
-
-try:
-    import torchaudio
-    HAS_TORCHAUDIO = True
-except ImportError:
-    HAS_TORCHAUDIO = False
+from .gemini_common import (
+    HAS_GENAI,
+    TTS_MODELS,
+    build_client,
+    fallback_chain,
+    get_api_key,
+    interaction_audio_bytes,
+    pcm16_to_audio,
+    run_with_fallback,
+)
 
 
 class GeminiTTS:
-    CONFIG_PATH = os.path.join(os.path.dirname(__file__), "config.json")
-
-    TTS_MODELS = [
-        "gemini-3.1-flash-tts-preview",
+    TTS_MODELS = TTS_MODELS
+    VOICES = [
+        "Puck", "Charon", "Kore", "Fenrir",
+        "Leda", "Orus", "Aoede", "Callirhoe",
     ]
-
-    VOICES = ["Puck", "Charon", "Kore", "Fenrir", "Leda", "Orus", "Aoede", "Callirhoe"]
 
     @classmethod
     def INPUT_TYPES(cls):
         return {
             "required": {
-                "text": ("STRING", {"multiline": True, "default": "Hello, this is a test."}),
-                "model": (cls.TTS_MODELS, {"default": "gemini-3.1-flash-tts-preview"}),
-                "voice": (cls.VOICES, {"default": "Puck"}),
+                "text": ("STRING", {"multiline": True, "default": "Hello, this is a Gemini 3.8 TTS test."}),
+                "model": (cls.TTS_MODELS, {"default": "gemini-3.8-flash-tts"}),
+                "voice": (cls.VOICES, {"default": "Kore"}),
             },
             "optional": {
-                "speed": ("FLOAT", {"default": 1.0, "min": 0.5, "max": 2.0, "step": 0.1}),
+                "style": ("STRING", {"multiline": True, "default": "Natural, clear, expressive narration."}),
+                "speed": ("FLOAT", {"default": 1.0, "min": 0.5, "max": 2.0, "step": 0.05}),
                 "pitch": ("FLOAT", {"default": 0.0, "min": -10.0, "max": 10.0, "step": 0.5}),
                 "api_key": ("STRING", {"default": ""}),
                 "proxy": ("STRING", {"default": ""}),
-            }
+                "fallback_enabled": ("BOOLEAN", {"default": True}),
+                "retries_per_model": ("INT", {"default": 1, "min": 0, "max": 4, "step": 1}),
+                "cooldown_seconds": ("FLOAT", {"default": 30.0, "min": 0.0, "max": 300.0, "step": 1.0}),
+            },
         }
 
     RETURN_TYPES = ("AUDIO", "STRING")
@@ -55,166 +52,119 @@ class GeminiTTS:
     FUNCTION = "generate_speech"
     CATEGORY = "Gemini 3.x"
 
-    def _get_api_key(self, api_key_input):
-        if api_key_input and api_key_input.strip():
-            return api_key_input.strip()
-        if os.path.exists(self.CONFIG_PATH):
+    @classmethod
+    def _candidate_models(cls, selected: str) -> list[str]:
+        return fallback_chain(selected, cls.TTS_MODELS)
+
+    @staticmethod
+    def _decode_audio(data: bytes, mime: str):
+        mime_l = (mime or "").lower()
+        if "l16" in mime_l or "pcm" in mime_l:
+            rate = 24000
+            match = "rate="
+            if match in mime_l:
+                try:
+                    rate = int(mime_l.split(match, 1)[1].split(";", 1)[0])
+                except Exception:
+                    pass
+            return pcm16_to_audio(data, rate, 1)
+        if "wav" in mime_l:
             try:
-                with open(self.CONFIG_PATH, "r", encoding="utf-8") as f:
-                    return json.load(f).get("GEMINI_API_KEY", "")
+                with wave.open(io.BytesIO(data), "rb") as wf:
+                    channels = wf.getnchannels()
+                    rate = wf.getframerate()
+                    raw = wf.readframes(wf.getnframes())
+                arr = np.frombuffer(raw, dtype=np.int16).astype(np.float32) / 32768.0
+                if channels > 1:
+                    arr = arr.reshape(-1, channels).T.mean(axis=0)
+                return {"waveform": torch.from_numpy(arr.copy()).reshape(1, 1, -1), "sample_rate": rate}
             except Exception:
                 pass
-        return os.environ.get("GEMINI_API_KEY", "")
+        return pcm16_to_audio(data, 24000, 1)
 
-    def _parse_audio_mime_type(self, mime_type):
-        """Parse audio/l16; rate=24000; channels=1"""
-        rate = 24000
-        channels = 1
-
-        if mime_type:
-            mt = mime_type.lower()
-            rate_match = re.search(r'rate=(\d+)', mt)
-            if rate_match:
-                rate = int(rate_match.group(1))
-            ch_match = re.search(r'channels=(\d+)', mt)
-            if ch_match:
-                channels = int(ch_match.group(1))
-
-        return rate, channels
-
-    def _make_audio_dict(self, waveform_tensor, sample_rate):
-        """Create ComfyUI AUDIO dict. waveform must be [batch, channels, samples]"""
-        if waveform_tensor.dim() == 1:
-            waveform_tensor = waveform_tensor.unsqueeze(0).unsqueeze(0)
-        elif waveform_tensor.dim() == 2:
-            waveform_tensor = waveform_tensor.unsqueeze(0)
-        return {"waveform": waveform_tensor, "sample_rate": sample_rate}
-
-    def _load_audio_from_bytes(self, audio_bytes, mime_type="audio/mp3"):
-        """Load audio bytes into ComfyUI AUDIO dict format"""
-        rate, channels = self._parse_audio_mime_type(mime_type)
-
-        # Handle raw PCM (audio/l16)
-        if "l16" in mime_type.lower() or "pcm" in mime_type.lower():
-            audio_np = np.frombuffer(audio_bytes, dtype=np.int16).astype(np.float32) / 32767.0
-
-            if channels > 1:
-                samples = len(audio_np) // channels
-                audio_np = audio_np[:samples * channels].reshape(-1, channels).T
-            else:
-                audio_np = audio_np.reshape(1, -1)
-
-            audio_tensor = torch.from_numpy(audio_np).unsqueeze(0)
-            return self._make_audio_dict(audio_tensor, rate)
-
-        # Try torchaudio for MP3/WAV/OGG
-        if HAS_TORCHAUDIO:
-            try:
-                buffer = io.BytesIO(audio_bytes)
-                fmt = "mp3"
-                if "wav" in mime_type.lower():
-                    fmt = "wav"
-                elif "ogg" in mime_type.lower():
-                    fmt = "ogg"
-                elif "flac" in mime_type.lower():
-                    fmt = "flac"
-
-                waveform, sr = torchaudio.load(buffer, format=fmt)
-
-                if waveform.shape[0] > 1:
-                    waveform = waveform.mean(dim=0, keepdim=True)
-
-                if sr != 44100:
-                    resampler = torchaudio.transforms.Resample(sr, 44100)
-                    waveform = resampler(waveform)
-                    sr = 44100
-
-                waveform = waveform.unsqueeze(0)
-                return self._make_audio_dict(waveform, sr)
-            except Exception as e:
-                print(f"[Gemini TTS] torchaudio failed: {e}")
-
-        # Fallback: try wave (WAV only)
-        try:
-            import wave
-            buffer = io.BytesIO(audio_bytes)
-            with wave.open(buffer, 'rb') as wav:
-                sr = wav.getframerate()
-                ch = wav.getnchannels()
-                frames = wav.readframes(wav.getnframes())
-                audio_np = np.frombuffer(frames, dtype=np.int16).astype(np.float32) / 32767.0
-                if ch > 1:
-                    audio_np = audio_np.reshape(-1, ch).T
-                else:
-                    audio_np = audio_np.reshape(1, -1)
-                audio_tensor = torch.from_numpy(audio_np).unsqueeze(0)
-                return self._make_audio_dict(audio_tensor, sr)
-        except Exception as e:
-            print(f"[Gemini TTS] wave fallback failed: {e}")
-
-        return None
-
-    def generate_speech(self, text, model, voice, speed=1.0, pitch=0.0, api_key="", proxy=""):
-
+    def generate_speech(
+        self,
+        text,
+        model,
+        voice,
+        style="Natural, clear, expressive narration.",
+        speed=1.0,
+        pitch=0.0,
+        api_key="",
+        proxy="",
+        fallback_enabled=True,
+        retries_per_model=1,
+        cooldown_seconds=30.0,
+    ):
+        placeholder = {"waveform": torch.zeros((1, 1, 24000)), "sample_rate": 24000}
         if not HAS_GENAI:
-            placeholder = self._make_audio_dict(torch.zeros((1, 1, 24000)), 24000)
-            return (placeholder, "Error: google-genai not installed")
-
-        key = self._get_api_key(api_key)
+            return placeholder, "Error: google-genai is not installed"
+        key = get_api_key(api_key)
         if not key:
-            placeholder = self._make_audio_dict(torch.zeros((1, 1, 24000)), 24000)
-            return (placeholder, "Error: No API key")
-
-        client = genai.Client(api_key=key)
-
+            return placeholder, "Error: No Gemini API key"
         try:
-            response = client.models.generate_content(
-                model=model,
-                contents=text,
-                config=types.GenerateContentConfig(
-                    response_modalities=["Audio"],
-                    speech_config=types.SpeechConfig(
-                        voice_config=types.VoiceConfig(
-                            prebuilt_voice_config=types.PrebuiltVoiceConfig(voice_name=voice)
-                        )
-                    )
-                )
+            client = build_client(key, proxy)
+        except Exception as exc:
+            return placeholder, f"Error initializing Gemini client: {exc}"
+
+        spoken_style = style.strip() or "Natural, clear, expressive narration."
+        spoken_style += f" Pace approximately {float(speed):.2f}x."
+        if abs(float(pitch)) > 0.001:
+            spoken_style += f" Use a pitch impression of {float(pitch):+.1f} semitone(s)."
+
+        # Google documents Gemini 3.8 TTS through the Interactions API. The text is
+        # kept verbatim; delivery instructions live in speech_metadata annotations.
+        interaction_input = [{
+            "type": "user_input",
+            "content": [{
+                "type": "text",
+                "text": text,
+                "annotations": [{
+                    "type": "speech_metadata",
+                    "style": spoken_style,
+                }],
+            }],
+        }]
+
+        def request(current_model):
+            return client.interactions.create(
+                model=current_model,
+                input=interaction_input,
+                response_format={"type": "audio"},
+                generation_config={
+                    "speech_config": [
+                        {"voice": voice},
+                    ],
+                },
             )
 
-            audio_bytes = None
-            mime_type = "audio/mp3"
+        try:
+            interaction, actual_model, fallback_used = run_with_fallback(
+                self._candidate_models(model),
+                request,
+                retries_per_model=retries_per_model,
+                cooldown_seconds=cooldown_seconds,
+                fallback_enabled=fallback_enabled,
+                log_prefix="[Gemini TTS]",
+            )
+        except Exception as exc:
+            return placeholder, f"Error: {exc}"
 
-            for part in response.candidates[0].content.parts:
-                if part.inline_data:
-                    mime_type = part.inline_data.mime_type or "audio/mp3"
-                    audio_bytes = part.inline_data.data
-                    break
-
-            if not audio_bytes:
-                placeholder = self._make_audio_dict(torch.zeros((1, 1, 24000)), 24000)
-                return (placeholder, "No audio data in response")
-
-            audio_data = self._load_audio_from_bytes(audio_bytes, mime_type)
-
-            if audio_data is None:
-                placeholder = self._make_audio_dict(torch.zeros((1, 1, 24000)), 24000)
-                return (placeholder, f"Failed to decode audio. MIME type: {mime_type}")
-
-            info = {
-                "model": model,
-                "voice": voice,
-                "speed": speed,
-                "pitch": pitch,
-                "text_length": len(text),
-                "mime_type": mime_type,
-                "sample_rate": audio_data["sample_rate"],
-                "duration_sec": audio_data["waveform"].shape[-1] / audio_data["sample_rate"],
-            }
-
-            return (audio_data, json.dumps(info, ensure_ascii=False))
-
-        except Exception as e:
-            error_msg = str(e)
-            print(f"[Gemini TTS] Error: {error_msg}")
-            placeholder = self._make_audio_dict(torch.zeros((1, 1, 24000)), 24000)
-            return (placeholder, f"Error: {error_msg}")
+        audio_bytes, mime = interaction_audio_bytes(interaction)
+        if not audio_bytes:
+            return placeholder, "Error: Gemini returned no audio data"
+        audio = self._decode_audio(audio_bytes, mime or "audio/wav")
+        info = {
+            "requested_model": model,
+            "actual_model": actual_model,
+            "fallback_used": fallback_used,
+            "voice": voice,
+            "style": spoken_style,
+            "speed_guidance": speed,
+            "pitch_guidance": pitch,
+            "mime_type": mime,
+            "sample_rate": audio["sample_rate"],
+            "duration_sec": audio["waveform"].shape[-1] / audio["sample_rate"],
+            "text_length": len(text),
+        }
+        return audio, json.dumps(info, ensure_ascii=False, indent=2)

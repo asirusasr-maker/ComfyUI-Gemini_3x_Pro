@@ -1,11 +1,14 @@
 {
-    "GEMINI_API_KEY": "your_api_key_here",
-    "DEFAULT_MODEL": "gemini-3.7-flash",
-    "DEFAULT_IMAGE_MODEL": "gemini-3.1-flash-image",
-    "DEFAULT_VIDEO_MODEL": "veo-3.1-generate-preview",
-    "DEFAULT_TTS_MODEL": "gemini-3.1-flash-tts-preview",
-    "PROXY": "",
-    "RPM_LIMIT": 15,
-    "TPM_LIMIT": 1000000,
-    "RPD_LIMIT": 1500
+  "GEMINI_API_KEY": "your_api_key_here",
+  "DEFAULT_MODEL": "gemini-3.8-flash",
+  "DEFAULT_IMAGE_MODEL": "gemini-3.1-flash-image",
+  "DEFAULT_VIDEO_MODEL": "veo-3.1-generate-preview",
+  "DEFAULT_TTS_MODEL": "gemini-3.8-flash-tts",
+  "DEFAULT_LIVE_MODEL": "gemini-3.8-live",
+  "PROXY": "",
+  "FALLBACK_ENABLED": true,
+  "RETRIES_PER_MODEL": 1,
+  "COOLDOWN_SECONDS": 30,
+  "BACKOFF_INITIAL_SECONDS": 1.5,
+  "BACKOFF_MAX_SECONDS": 12
 }

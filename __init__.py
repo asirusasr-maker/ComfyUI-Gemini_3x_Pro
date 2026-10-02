@@ -1,7 +1,4 @@
-"""
-ComfyUI-Gemini_3x_Pro
-Advanced Gemini 3.x nodes for ComfyUI
-"""
+"""ComfyUI-Gemini_3x_Pro v2.0 — current Gemini 3.x nodes with robust fallback."""
 
 from .gemini_3x_node import Gemini3xPro
 from .gemini_image_gen_node import GeminiImageGen
@@ -22,13 +19,13 @@ NODE_CLASS_MAPPINGS = {
 }
 
 NODE_DISPLAY_NAME_MAPPINGS = {
-    "Gemini 3.x Pro": "🧠 Gemini 3.x Pro Multimodal",
-    "Gemini Image Gen": "🎨 Gemini Image Generation",
-    "Gemini Video Gen": "🎬 Gemini Video Generation",
-    "Gemini TTS": "🔊 Gemini Text-to-Speech",
-    "Gemini Audio Chat": "🎙️ Gemini Live Audio Chat",
-    "Gemini Audio Recorder": "🎤 Audio Recorder Gemini",
-    "Multi Images Input": "📸 Multi Images Input",
+    "Gemini 3.x Pro": "🧠 Gemini 3.x Pro Multimodal v2",
+    "Gemini Image Gen": "🎨 Gemini Image Generation v2",
+    "Gemini Video Gen": "🎬 Gemini Video Generation v2",
+    "Gemini TTS": "🔊 Gemini Text-to-Speech v2",
+    "Gemini Audio Chat": "🎙️ Gemini Live Audio Chat v2",
+    "Gemini Audio Recorder": "🎤 Audio Recorder Gemini v2",
+    "Multi Images Input": "📸 Multi Images Input v2",
 }
 
 WEB_DIRECTORY = "./js"
