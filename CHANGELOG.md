@@ -1,5 +1,19 @@
 # Changelog
 
+## v2.0.6 — TTS Pro controls and current Gemini 3.8 voices
+
+- Reworked `Gemini TTS` around the current Gemini 3.8 Flash TTS / Flash-Lite TTS API.
+- Added structured controls for language, accent, emotion, style, narration mode, pace, pitch and speaker profiles.
+- Added 30 documented prebuilt studio voices, plus support for Extended Voice Library / Voice Design / Voice Replication IDs through `custom_voice_id`.
+- Added custom style, narration, profile, pace and pitch instructions.
+- Added inline vocal-tag support for `<laugh>`, `<sigh>`, `<breath>`, `<short pause>`, `<long pause>` and related human vocal events.
+- Kept the v2.0.5 `speed` and `pitch` inputs for workflow compatibility, translating them into natural-language guidance instead of pretending they are native numeric API controls.
+- Kept automatic TTS retry/fallback between Flash TTS and Flash-Lite TTS.
+- Improved WAV detection/decoding for the current default `audio/wav` output.
+- Updated package version to 2.0.6.
+
+# Changelog
+
 ## v2.0.5 — Audio Recorder queue fix
 
 - Restored the native **Start Record** button for `Gemini Audio Recorder`.

@@ -1,4 +1,4 @@
-"""ComfyUI-Gemini_3x_Pro v2.0 — current Gemini 3.x nodes with robust fallback."""
+"""ComfyUI-Gemini_3x_Pro v2.0.6 — current Gemini 3.x nodes with robust fallback."""
 
 from .gemini_3x_node import Gemini3xPro
 from .gemini_image_gen_node import GeminiImageGen

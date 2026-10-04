@@ -1,0 +1,20 @@
+[project]
+name = "gemini-3x-pro"
+version = "2.0.6"
+description = "Advanced Gemini 3.x multimodal nodes for ComfyUI."
+license = { file = "LICENSE" }
+requires-python = ">=3.10"
+
+dynamic = ["dependencies"]
+
+[tool.setuptools.dynamic]
+dependencies = { file = ["requirements.txt"] }
+
+[project.urls]
+Repository = "https://github.com/asirusasr-maker/ComfyUI-Gemini_3x_Pro"
+Documentation = "https://github.com/asirusasr-maker/ComfyUI-Gemini_3x_Pro"
+"Bug Tracker" = "https://github.com/asirusasr-maker/ComfyUI-Gemini_3x_Pro/issues"
+
+[tool.comfy]
+PublisherId = "asirus"
+DisplayName = "ComfyUI Gemini 3x Pro"

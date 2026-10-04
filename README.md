@@ -1,6 +1,23 @@
-# ComfyUI-Gemini_3x_Pro v2.0
+# ComfyUI-Gemini_3x_Pro v2.0.6
 
 Advanced Gemini 3.x / Nano Banana / Veo / Omni nodes for ComfyUI, updated for the current Google Gemini API model catalog available in October 2026.
+
+
+## v2.0.6 — TTS Pro
+
+The 2.0.6 release upgrades the TTS node to the current Gemini 3.8 TTS API and adds production-oriented voice direction controls.
+
+- **Gemini 3.8 Flash TTS** for maximum fidelity and expressive narration.
+- **Gemini 3.8 Flash-Lite TTS** as the lower-latency/cost fallback.
+- Structured controls for **Language, Voice, Emotion, Style, Narration Mode, Accent, Pace, Pitch/Prosody** and **Speaker Profile**.
+- **Custom Direction** for detailed voice-acting instructions.
+- **Inline vocal tags** such as `<laugh>`, `<sigh>`, `<breath>`, `<short pause>` and `<long pause>`.
+- **Custom Voice ID** support for Extended Voice Library, Voice Design and Voice Replication voices.
+- Existing `speed` / `pitch` inputs remain available for workflow compatibility and are translated into natural-language delivery guidance.
+- Automatic **TTS retry/fallback** remains enabled for transient API failures.
+- Updated audio handling for the current Gemini 3.8 default **WAV** response.
+
+The current Google TTS documentation recommends keeping the transcript separate from delivery instructions: sustained style, emotion, pacing and prosody belong in structured `speech_metadata.style`, while momentary vocal events belong in inline tags. Gemini 3.8 Flash TTS supports more than 130 languages and the Flash-Lite model is intended for higher-throughput, lower-latency workloads.
 
 ## What changed in v2.0
 
@@ -25,12 +42,12 @@ Advanced Gemini 3.x / Nano Banana / Veo / Omni nodes for ComfyUI, updated for th
 | Family | Models |
 |---|---|
 | Text / multimodal | `gemini-3.8-flash`, `gemini-3.7-flash`, `gemini-3.6-flash`, `gemini-3.5-flash`, `gemini-3.5-flash-lite`, `gemini-3.1-flash-lite`, `gemini-3.1-pro-preview` |
-| Image | `gemini-3-pro-image`, `gemini-3.1-flash-image`, `gemini-3.1-flash-lite-image` |
+| Image | Nano Banana Pro (`gemini-3-pro-image`), Nano Banana 2 (`gemini-3.1-flash-image`), Nano Banana 2 Lite (`gemini-3.1-flash-lite-image`) |
 | TTS | `gemini-3.8-flash-tts`, `gemini-3.8-flash-lite-tts` |
 | Live | `gemini-3.8-live`, `gemini-3.8-live-extended-thinking` |
 | Video | `veo-3.1-generate-preview`, `veo-3.1-fast-generate-preview`, `veo-3.1-lite-generate-preview`, `gemini-omni-1.1-flash` |
 
-The model list is based on Google's current Gemini API model page, last updated 1 October 2026. Stable models are preferred for production; preview endpoints are retained only where Google's current catalog still lists them. See the official links below.
+The model list is maintained against Google's current Gemini API catalog. Stable models are preferred for production; preview endpoints are retained only where Google's current catalog still lists them. For TTS, this release requires the current Google GenAI SDK (`google-genai>=2.27.0,<3.0`).
 
 ## Fallback behavior
 
